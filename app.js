@@ -7,6 +7,6 @@ const app = express();
 app.use(express.json());
 
 app.use('/api', apiRouter);
-app.all('*', notARoute)
+app.all('*', notARoute);
 
 module.exports = app;

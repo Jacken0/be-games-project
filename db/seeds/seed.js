@@ -67,21 +67,20 @@ const seed = (data) => {
       INSERT INTO categories (slug, description)
       VALUES %L
       RETURNING* ;`,
-        categoryData.map((catagory) => {
-          return [catagory.slug, catagory.description];
+        categoryData.map((category) => {
+          return [category.slug, category.description];
         })
     )
     return db.query(queryCategories);
   })
   .then(() => {
     //console.log('Inserting review data ...')
-
     const queryReviews = format(`
       INSERT INTO reviews (title, designer, owner, review_img_url, review_body, category, created_at, votes)
       VALUES %L
       RETURNING* ;`,
         reviewData.map((review) => {
-          return [review.title, review.designer, review.owner, review.review_img_url, review.review_body, review.catagory, review.created_at, review.votes];
+          return [review.title, review.designer, review.owner, review.review_img_url, review.review_body, review.category, review.created_at, review.votes];
         })
     )
     return db.query(queryReviews);
