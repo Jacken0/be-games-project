@@ -69,6 +69,14 @@ describe('app', () => {
             expect(body.message).toBe('Invalid input data')
           })
         })
+        test('status: 404, Review not found', () => {
+          return request(app)
+          .get('/api/reviews/5555') // Number out of range
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.message).toBe('Review not found')
+          })
+        })
       })
     })
   })

@@ -12,6 +12,11 @@ exports.fetchReviews = ({ review_id }) => {
     SELECT * FROM reviews
     WHERE review_id = $1;`, [review_id])
   .then(({ rows }) => {
-    return rows[0];
+    const review = rows[0];
+    
+    if (!review) {
+      return Promise.reject({ status: 404, message: 'Review not found'})
+    }
+    return review;
   })
 }
