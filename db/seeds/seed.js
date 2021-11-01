@@ -47,7 +47,8 @@ const seed = (data) => {
     );`)
   })
   .then(() => {
-    console.log('Inserting user data ...')
+    console.log('Inserting data ...')
+    //console.log('Inserting user data ...')
 
     const queryUsers = format(`
       INSERT INTO users (username, name, avatar_url)
@@ -60,7 +61,7 @@ const seed = (data) => {
     return db.query(queryUsers);
   })
   .then(() => {
-    console.log('Inserting category data ...')
+    //console.log('Inserting category data ...')
 
     const queryCategories = format(`
       INSERT INTO categories (slug, description)
@@ -73,7 +74,7 @@ const seed = (data) => {
     return db.query(queryCategories);
   })
   .then(() => {
-    console.log('Inserting review data ...')
+    //console.log('Inserting review data ...')
 
     const queryReviews = format(`
       INSERT INTO reviews (title, designer, owner, review_img_url, review_body, category, created_at, votes)
@@ -86,7 +87,7 @@ const seed = (data) => {
     return db.query(queryReviews);
   })
   .then(() => {
-    console.log('Inserting comment data ...')
+    //console.log('Inserting comment data ...')
 
     const queryComments = format(`
       INSERT INTO comments (body, votes, author, review_id, created_at)

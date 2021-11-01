@@ -9,6 +9,14 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('app', () => {
+  test("status: 404, invalid URL message", () => {
+		return request(app)
+			.get("/invalid")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.message).toBe("Invalid URL");
+			});
+	});
   describe('/api/categories', () => {
     describe('GET', () => {
       test('status: 200, responds with an array of category objects', () => {
