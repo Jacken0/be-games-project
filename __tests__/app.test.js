@@ -61,6 +61,14 @@ describe('app', () => {
             })
           })
         })
+        test('status: 400, Invalid data type', () => {
+          return request(app)
+          .get('/api/reviews/not_a_number')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('Invalid input data')
+          })
+        })
       })
     })
   })

@@ -1,5 +1,5 @@
 const express = require('express');
-const { notARoute } = require('./controllers/errors.controllers');
+const { notARoute, handlesServerErrors, handlesPSQLErrors } = require('./controllers/errors.controllers');
 const apiRouter = require('./routes/api-router');
 
 
@@ -8,5 +8,8 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 app.all('*', notARoute);
+
+app.use(handlesPSQLErrors);
+app.use(handlesServerErrors);
 
 module.exports = app;
