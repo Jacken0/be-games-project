@@ -3,7 +3,7 @@ exports.notARoute = (req, res) => {
 };
 
 exports.handlesPSQLErrors = (err, req, res, next) => {
-  console.log(err.code);
+  //console.log(err.code);
   if (err.code === "22P02") {
     res.status(400).send({ message: 'Invalid input data' });
   } else {
