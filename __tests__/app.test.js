@@ -79,7 +79,7 @@ describe('app', () => {
           })
         })
       })
-      describe.only('PATCH', () => {
+      describe('PATCH', () => {
         test('Status: 201, and updated review object', () => {
           return request(app)
           .patch('/api/reviews/1')
@@ -98,6 +98,33 @@ describe('app', () => {
               created_at: '2021-01-18T10:00:20.514Z'
             }
             })
+          })
+        })
+        test('Status: 404, and message review not found', () => {
+          return request(app)
+          .patch('/api/reviews/9999')
+          .send({ inc_votes: 5 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.message).toBe('Review not found')
+          })
+        })
+        test('Status: 400, and message Invalid data type', () => {
+          return request(app)
+          .patch('/api/reviews/not_an_id')
+          .send({ inc_votes: 5 })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('Invalid input data')
+          })
+        })
+        test('Status: 400, and message Invalid data type', () => {
+          return request(app)
+          .patch('/api/reviews/1')
+          .send({ inc_votes: 'ten' })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('Invalid input data')
           })
         })
       })

@@ -34,8 +34,12 @@ exports.updateReview = ({ review_id }, { inc_votes }) => {
     RETURNING * ;`,
     [inc_votes, review_id])
   .then(({ rows }) => {
-    console.log(rows)
-    return rows[0]
+    const review = rows[0]
+
+    if (!review) {
+      return Promise.reject({ status: 404, message: 'Review not found'})
+    }
+    return review
   })
 }
 
