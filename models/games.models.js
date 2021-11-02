@@ -7,8 +7,8 @@ exports.fetchCategories = () => {
     return rows;
   })
 }
+
 exports.fetchReviews = ({ review_id }) => {
-  console.log(review_id, 'TEST')
   return db.query(`
     SELECT reviews.*, COUNT(comments.review_id) AS comment_count
     FROM reviews
@@ -26,9 +26,19 @@ exports.fetchReviews = ({ review_id }) => {
   })
 }
 
-// COUNT(comments) AS comment_count
+exports.updateReview = ({ review_id }, { inc_votes }) => {
+  return db.query(`
+    UPDATE reviews 
+    SET votes = votes + $1
+    WHERE review_id = $2
+    RETURNING * ;`,
+    [inc_votes, review_id])
+  .then(({ rows }) => {
+    console.log(rows)
+    return rows[0]
+  })
+}
 
-// -- LEFT JOIN comments
-//     -- ON reviews.review_id = comments.review_id
+// exports.addReview = () => {
 
-//-- GROUP BY review.review_id
+// }
