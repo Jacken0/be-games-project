@@ -43,21 +43,19 @@ exports.updateReview = ({ review_id }, { inc_votes }) => {
   })
 }
 
-exports.fetchAllReviews = () => {
+exports.fetchAllReviews = (sort_by = 'reviews.created_at') => {
+  if ( !['reviews.created_at'].includes(sort_by)) {
+    return Promise.reject({ status: 400, message: 'Invalid sort query'})
+  }
   return db.query(`
     SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
     FROM reviews
     LEFT JOIN comments
     ON reviews.review_id = comments.review_id
-    GROUP BY reviews.review_id;
+    GROUP BY reviews.review_id
+    ORDER BY ${sort_by};
     ;`)
   .then(({ rows }) => {
     return rows
   })
 }
-// exports.addReview = () => {
-
-// , COUNT(comments.review_id) AS comment_count
-//LEFT JOIN comments
-// ON reviews.review_id = comments.review_id
-// GROUP BY reviews.review_id
