@@ -212,6 +212,32 @@ describe('app', () => {
             })
           })
       })
+      test('status: 200, accepts order query', () => {
+        return request(app)
+          .get('/api/reviews?order=asc')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toBeSortedBy('created_at', { 
+              ascending: true 
+            })
+          })
+      })
+      test('status: 400, message of invalid order query', () => {
+        return request(app)
+          .get('/api/reviews?order=INVALID')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('Invalid order query')
+          })
+      })
+      test('status: 400, message of invalid data type', () => {
+        return request(app)
+          .get('/api/reviews?order=5555')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('Invalid order query')
+          })
+      })
     })
   })
 })
