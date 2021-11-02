@@ -43,6 +43,21 @@ exports.updateReview = ({ review_id }, { inc_votes }) => {
   })
 }
 
+exports.fetchAllReviews = () => {
+  return db.query(`
+    SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
+    FROM reviews
+    LEFT JOIN comments
+    ON reviews.review_id = comments.review_id
+    GROUP BY reviews.review_id;
+    ;`)
+  .then(({ rows }) => {
+    return rows
+  })
+}
 // exports.addReview = () => {
 
-// }
+// , COUNT(comments.review_id) AS comment_count
+//LEFT JOIN comments
+// ON reviews.review_id = comments.review_id
+// GROUP BY reviews.review_id

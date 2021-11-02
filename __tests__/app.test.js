@@ -37,9 +37,8 @@ describe('app', () => {
       })
     })
   })
-  describe('/api/reviews', () => {
-    describe('/:review_id', () => {
-      describe('GET', () => {
+  describe('/api/reviews/:review_id', () => {
+    describe('GET', () => {
         test('status: 200, responds with single review', () => {
           return request(app)
           .get('/api/reviews/1')
@@ -78,8 +77,8 @@ describe('app', () => {
             expect(body.message).toBe('Review not found')
           })
         })
-      })
-      describe('PATCH', () => {
+    })
+    describe('PATCH', () => {
         test('Status: 201, and updated review object', () => {
           return request(app)
           .patch('/api/reviews/1')
@@ -127,12 +126,37 @@ describe('app', () => {
             expect(body.message).toBe('Invalid input data')
           })
         })
+    })
+  })
+  describe.only('/api/reviews', () => {
+    describe('GET', () => {
+      test('Status: 200, and returns an array of review objects', () => {
+        return request(app)
+        .get('/api/reviews')
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toBeInstanceOf(Array)
+          expect(reviews).toHaveLength(13)
+          reviews.forEach((review) => {
+            expect(review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String)
+            })
+          })
+        })
       })
+    })
+  })
+})
       // describe('POST', () => {
       //   test('Status: 201, adds new review to review table', () => {
 
       //   })
       // })
-    })
-  })
-})
