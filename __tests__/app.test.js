@@ -152,38 +152,47 @@ describe('app', () => {
           })
         })
       })
-      test("status: 200, reviews are sorted by date as default", () => {
+      test('status: 200, reviews are sorted by date as default', () => {
         return request(app)
-          .get("/api/reviews")
+          .get('/api/reviews')
           .expect(200)
           .then(({ body }) => {
-              expect(body.reviews).toBeSortedBy("created_at");
+              expect(body.reviews).toBeSortedBy('created_at');
           });
       })
-      test("status: 200, accepts sort_by query", () => {
+      test('status: 200, accepts sort_by query', () => {
         return request(app)
-          .get("/api/reviews?sort_by=title")
+          .get('/api/reviews?sort_by=title')
           .expect(200)
           .then(({ body }) => {
-              expect(body.reviews).toBeSortedBy("title");
+              expect(body.reviews).toBeSortedBy('title');
           });
       });
-      test("status: 400, message of invalid sort query", () => {
+      test('status: 400, message of invalid sort query', () => {
         return request(app)
-          .get("/api/reviews?sort_by=not_a_valid_query")
+          .get('/api/reviews?sort_by=not_a_valid_query')
           .expect(400)
           .then(({ body }) => {
-              expect(body.message).toBe("Invalid sort query");
+              expect(body.message).toBe('Invalid sort query');
           });
       });
-      test("status: 400, message of invalid data type", () => {
+      test('status: 400, message of invalid data type', () => {
         return request(app)
-          .get("/api/reviews?sort_by=9999")
+          .get('/api/reviews?sort_by=9999')
           .expect(400)
           .then(({ body }) => {
-              expect(body.message).toBe("Invalid sort query");
+              expect(body.message).toBe('Invalid sort query');
           });
       });
+      test('status: 200, invalid sort_by query uses default sorting', () => {
+        return request(app)
+          .get('/api/reviews?soby=title')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.reviews).toBeSortedBy('created_at');
+          });
+      });
+      test('')
     })
   })
 })
