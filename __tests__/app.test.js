@@ -168,6 +168,22 @@ describe('app', () => {
               expect(body.reviews).toBeSortedBy("title");
           });
       });
+      test("status: 400, message of invalid sort query", () => {
+        return request(app)
+          .get("/api/reviews?sort_by=not_a_valid_query")
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.message).toBe("Invalid sort query");
+          });
+      });
+      test("status: 400, message of invalid data type", () => {
+        return request(app)
+          .get("/api/reviews?sort_by=9999")
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.message).toBe("Invalid sort query");
+          });
+      });
     })
   })
 })
