@@ -44,7 +44,7 @@ exports.updateReview = ({ review_id }, { inc_votes }) => {
 }
 
 exports.fetchAllReviews = (sort_by = 'reviews.created_at') => {
-  if ( !['reviews.created_at'].includes(sort_by)) {
+  if ( !['owner','review_id','category','review.votes','comment_count', 'title', 'reviews.created_at'].includes(sort_by)) {
     return Promise.reject({ status: 400, message: 'Invalid sort query'})
   }
   return db.query(`

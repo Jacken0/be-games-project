@@ -154,12 +154,20 @@ describe('app', () => {
       })
       test("status: 200, reviews are sorted by date as default", () => {
         return request(app)
-            .get("/api/reviews")
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.reviews).toBeSortedBy("created_at");
-            });
-    });
+          .get("/api/reviews")
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.reviews).toBeSortedBy("created_at");
+          });
+      })
+      test("status: 200, accepts sort_by query", () => {
+        return request(app)
+          .get("/api/reviews?sort_by=title")
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.reviews).toBeSortedBy("title");
+          });
+      });
     })
   })
 })
