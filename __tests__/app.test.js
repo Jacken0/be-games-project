@@ -17,6 +17,7 @@ describe('app', () => {
 				expect(body.message).toBe("Invalid URL");
 			});
 	});
+
   describe('/api/categories', () => {
     describe('GET', () => {
       test('status: 200, responds with an array of category objects', () => {
@@ -37,6 +38,7 @@ describe('app', () => {
       })
     })
   })
+
   describe('/api/reviews/:review_id', () => {
     describe('GET', () => {
         test('status: 200, responds with single review', () => {
@@ -78,6 +80,7 @@ describe('app', () => {
           })
         })
     })
+
     describe('PATCH', () => {
         test('Status: 201, and updated review object', () => {
           return request(app)
@@ -128,6 +131,7 @@ describe('app', () => {
         })
     })
   })
+
   describe.only('/api/reviews', () => {
     describe('GET', () => {
       test('Status: 200, and returns an array of review objects', () => {
@@ -157,15 +161,19 @@ describe('app', () => {
           .get('/api/reviews')
           .expect(200)
           .then(({ body }) => {
-              expect(body.reviews).toBeSortedBy('created_at');
-          });
+              expect(body.reviews).toBeSortedBy('created_at', { 
+                descending: true 
+              })
+          })
       })
       test('status: 200, accepts sort_by query', () => {
         return request(app)
           .get('/api/reviews?sort_by=title')
           .expect(200)
           .then(({ body }) => {
-              expect(body.reviews).toBeSortedBy('title');
+              expect(body.reviews).toBeSortedBy('title', { 
+                descending: true 
+              });
           });
       });
       test('status: 400, message of invalid sort query', () => {
@@ -189,10 +197,21 @@ describe('app', () => {
           .get('/api/reviews?soby=title')
           .expect(200)
           .then(({ body }) => {
-              expect(body.reviews).toBeSortedBy('created_at');
+              expect(body.reviews).toBeSortedBy('created_at', { 
+                descending: true 
+              });
           });
       });
-      test('')
+      test('status: 200, reviews are ordered DESC by default', () => {
+        return request(app)
+          .get('/api/reviews')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toBeSortedBy('created_at', { 
+              descending: true 
+            })
+          })
+      })
     })
   })
 })
