@@ -29,6 +29,18 @@ exports.fetchComments = ({ review_id }) => {
 
 exports.insertComment = ({ review_id },{ username, body }) => {
   return db.query(`
+  SELECT * FROM users
+  WHERE username = $1;`,
+  [username]
+  )
+  .then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 400, message: 'Invalid username'
+      })
+    }
+  })
+  return db.query(`
   INSERT INTO comments (
     author, body, review_id )
     VALUES ($1, $2, $3)

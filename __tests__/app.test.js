@@ -326,11 +326,11 @@ describe('app', () => {
       })
     })
     describe('POST', () => {
-      const newComment = {
-        username: 'bainesface',
-        body: 'THIS IS A TEST'
-      }
-      test.only('status: 201, responds with added comment', () => {
+      test('status: 201, responds with added comment', () => {
+        const newComment = {
+          username: 'bainesface',
+          body: 'THIS IS A TEST'
+        }
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
@@ -343,6 +343,19 @@ describe('app', () => {
             review_id: 1,
             created_at: expect.any(String)
           })
+        })
+      })
+      test.only('status: 400, invalid data for username', () => {
+        const newComment = {
+          username: 'NOT_A_USER',
+          body: 'THIS IS A TEST'
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid username')
         })
       })
     })
