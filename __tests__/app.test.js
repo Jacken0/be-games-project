@@ -238,6 +238,28 @@ describe('app', () => {
             expect(body.message).toBe('Invalid order query')
           })
       })
+      test('Status: 200, returns only reviews for category of dexterity', () => {
+        return request(app)
+          .get('/api/reviews?category=dexterity')
+          .expect(200)
+          .then(({ body }) => {
+            const { reviews } = body;
+            expect(reviews).toBeInstanceOf(Array)
+            expect(reviews).toHaveLength(1)
+            reviews.forEach((review) => {
+              expect(review).toMatchObject({
+                owner: expect.any(String),
+                title: expect.any(String),
+                review_id: expect.any(Number),
+                category: 'dexterity',
+                review_img_url: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(String)
+              })
+            })
+          })
+      })
     })
   })
 })

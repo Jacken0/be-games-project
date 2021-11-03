@@ -43,21 +43,33 @@ exports.updateReview = ({ review_id }, { inc_votes }) => {
   })
 }
 
-exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc') => {
+exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', category) => {
   if ( !['owner','review_id','category','review.votes','comment_count', 'title', 'reviews.created_at'].includes(sort_by)) {
     return Promise.reject({ status: 400, message: 'Invalid sort query'})
   }
   if (!['asc', 'desc', 'ASC', 'DESC'].includes(order)) {
     return Promise.reject({ status: 400, message: "Invalid order query" });
   }
-  return db.query(`
+  let queryStr = `
     SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
     FROM reviews
     LEFT JOIN comments
-    ON reviews.review_id = comments.review_id
+    ON reviews.review_id = comments.review_id`;
+
+  const queryValues = [];
+
+  if (category) {
+    queryValues.push(category);
+    queryStr += `
+    WHERE category = $1`
+  }
+
+  queryStr += `
     GROUP BY reviews.review_id
     ORDER BY ${sort_by} ${order}
-    ;`)
+    ;`;
+
+  return db.query(queryStr, queryValues)
   .then(({ rows }) => {
     return rows
   })
