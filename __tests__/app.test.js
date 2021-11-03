@@ -325,5 +325,26 @@ describe('app', () => {
         })
       })
     })
+    describe('POST', () => {
+      const newComment = {
+        username: 'bainesface',
+        body: 'THIS IS A TEST'
+      }
+      test.only('status: 201, responds with added comment', () => {
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.comment).toMatchObject({
+            body: 'THIS IS A TEST',
+            votes: expect.any(Number),
+            author: 'bainesface',
+            review_id: 1,
+            created_at: expect.any(String)
+          })
+        })
+      })
+    })
   })
 })

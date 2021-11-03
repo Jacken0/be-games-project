@@ -1,4 +1,4 @@
-const { getComments } = require('../controllers/comments.controllers');
+const { getComments, postComment } = require('../controllers/comments.controllers');
 const { getReviews, patchReview, getAllReviews } = require('../controllers/games.controllers');
 //const commentsRouter = require('./comments-router');
 
@@ -15,6 +15,7 @@ reviewsRouter
 
 reviewsRouter
   .route('/:review_id/comments')
-  .get(getComments);
+  .get(getComments)
+  .post(postComment);
 
 module.exports = reviewsRouter;
