@@ -260,6 +260,22 @@ describe('app', () => {
             })
           })
       })
+      test('Status: 400, error message of no matching category when passed a string', () => {
+        return request(app)
+          .get('/api/reviews?category=not_a_category')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('No matching category')
+          })
+      })
+      test('Status: 400, error message of no matching category when passed an invalid data type', () => {
+        return request(app)
+          .get('/api/reviews?category=5555')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).toBe('No matching category')
+          })
+      })
     })
   })
 })

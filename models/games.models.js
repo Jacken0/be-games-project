@@ -71,6 +71,11 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
 
   return db.query(queryStr, queryValues)
   .then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 400, message: 'No matching category'
+      })
+    }
     return rows
   })
 }
