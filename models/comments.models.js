@@ -38,9 +38,13 @@ exports.insertComment = ({ review_id },{ username, body }) => {
       return Promise.reject({
         status: 400, message: 'Invalid username'
       })
-    }
-  })
-  return db.query(`
+    } else if (
+      typeof body != 'string') {
+        return Promise.reject({
+          status: 400, message: 'Invalid body'
+        })
+    } else {
+      return db.query(`
   INSERT INTO comments (
     author, body, review_id )
     VALUES ($1, $2, $3)
@@ -51,4 +55,7 @@ exports.insertComment = ({ review_id },{ username, body }) => {
     console.log(rows)
     return rows[0]
   })
+    }
+  })
+    
 }

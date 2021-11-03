@@ -345,7 +345,7 @@ describe('app', () => {
           })
         })
       })
-      test.only('status: 400, invalid data for username', () => {
+      test('status: 400, invalid username', () => {
         const newComment = {
           username: 'NOT_A_USER',
           body: 'THIS IS A TEST'
@@ -356,6 +356,32 @@ describe('app', () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe('Invalid username')
+        })
+      })
+      test('status: 400, invalid username data type', () => {
+        const newComment = {
+          username: 5555,
+          body: 'THIS IS A TEST'
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid username')
+        })
+      })
+      test('status: 400, invalid body', () => {
+        const newComment = {
+          username: 'bainesface',
+          body: 5555
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid body')
         })
       })
     })
