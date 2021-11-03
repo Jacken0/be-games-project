@@ -7,9 +7,21 @@ exports.fetchComments = ({ review_id }) => {
   WHERE review_id = $1;`, [review_id])
   .then(({ rows }) => {
     if (rows.length === 0) {
-      return Promise.reject({
-        status: 200, message: 'No comments for this review yet, post now to be the first!'
-      })
+      return db.query(`
+      SELECT * FROM reviews
+      WHERE review_id = $1;`,
+      [review_id]
+      )
+      .then(({ rows }) => {
+        if (rows.length !== 0) {
+          return Promise.reject({
+            status: 200, message: 'No comments for this review yet, post now to be the first!'
+          })
+        }
+        return Promise.reject({
+          status: 404, message: 'review not found'
+        })
+      })     
     }
     return rows
   })

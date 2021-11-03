@@ -308,6 +308,22 @@ describe('app', () => {
           expect(body.message).toBe('No comments for this review yet, post now to be the first!')
         })
       })
+      test('status: 404, review not found', () => {
+        return request(app)
+        .get('/api/reviews/5555/comments')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe('review not found')
+        })
+      })
+      test('status: 400, invalid data type', () => {
+        return request(app)
+        .get('/api/reviews/not_valid/comments')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid input data')
+        })
+      })
     })
   })
 })
