@@ -279,7 +279,7 @@ describe('app', () => {
     })
   })
 
-  describe.only('/api/reviews/:review_id/comments', () => {
+  describe('/api/reviews/:review_id/comments', () => {
     describe('GET', () => {
       test('status: 200, responds with an array of comment objects', () => {
         return request(app)
@@ -298,6 +298,14 @@ describe('app', () => {
               body: expect.any(String),
             })
           })
+        })
+      })
+      test('status: 200, no comments for this review yet, post now to be the first!', () => {
+        return request(app)
+        .get('/api/reviews/1/comments')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.message).toBe('No comments for this review yet, post now to be the first!')
         })
       })
     })

@@ -6,7 +6,11 @@ exports.fetchComments = ({ review_id }) => {
   FROM comments
   WHERE review_id = $1;`, [review_id])
   .then(({ rows }) => {
-    console.log(rows,'model')
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 200, message: 'No comments for this review yet, post now to be the first!'
+      })
+    }
     return rows
   })
 }
