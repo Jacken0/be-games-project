@@ -79,3 +79,4 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
     return rows
   })
 }
+

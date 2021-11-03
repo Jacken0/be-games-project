@@ -132,7 +132,7 @@ describe('app', () => {
     })
   })
 
-  describe.only('/api/reviews', () => {
+  describe('/api/reviews', () => {
     describe('GET', () => {
       test('Status: 200, and returns an array of review objects', () => {
         return request(app)
@@ -278,9 +278,28 @@ describe('app', () => {
       })
     })
   })
-})
-      // describe('POST', () => {
-      //   test('Status: 201, adds new review to review table', () => {
 
-      //   })
-      // })
+  describe.only('/api/reviews/:review_id/comments', () => {
+    describe('GET', () => {
+      test('status: 200, responds with an array of comment objects', () => {
+        return request(app)
+        .get('/api/reviews/2/comments')
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments).toBeInstanceOf(Array);
+          expect(comments).toHaveLength(3);
+          comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+            })
+          })
+        })
+      })
+    })
+  })
+})
