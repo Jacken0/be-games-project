@@ -336,11 +336,12 @@ describe('app', () => {
         .send(newComment)
         .expect(201)
         .then(({ body }) => {
+          //console.log(body,'<-----')
           expect(body.comment).toMatchObject({
             body: 'THIS IS A TEST',
             votes: expect.any(Number),
             author: 'bainesface',
-            review_id: 1,
+            comment_id: expect.any(Number),
             created_at: expect.any(String)
           })
         })
