@@ -60,6 +60,24 @@ exports.insertComment = ({ review_id },{ username, body }) => {
     
 }
 
-exports.removeComment = () => {
-  
+exports.removeComment = ({ comment_id }) => {
+  return db.query(`
+  DELETE FROM comments
+  WHERE comment_id = $1
+  RETURNING * ;`,
+  [comment_id]
+  )
+  .then(({ rows }) => {
+    console.log(rows[0])
+    return rows[0]
+  })
+}
+
+exports.fetchAllComments = () => {
+  return db.query(`
+  SELECT *
+  FROM comments;`)
+  .then(({ rows }) => {
+    return rows
+  })
 }

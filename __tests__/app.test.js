@@ -386,4 +386,22 @@ describe('app', () => {
       })
     })
   })
+
+  describe.only('/api/comments/:comment_id', () => {
+    describe('DELETE', () => {
+      test('Status: 204, no return', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204)
+        .then(() => {
+          return request(app)
+          .get('/api/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).toHaveLength(5)
+          })
+        })      
+      })
+    })
+  })
 })
