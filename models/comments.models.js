@@ -56,8 +56,7 @@ exports.insertComment = ({ review_id },{ username, body }) => {
     return rows[0]
   })
     }
-  })
-    
+  })    
 }
 
 exports.removeComment = ({ comment_id }) => {
