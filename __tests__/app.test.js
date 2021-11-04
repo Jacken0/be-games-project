@@ -387,7 +387,7 @@ describe('app', () => {
     })
   })
 
-  describe.only('/api/comments/:comment_id', () => {
+  describe('/api/comments/:comment_id', () => {
     describe('DELETE', () => {
       test('Status: 204, no return', () => {
         return request(app)
@@ -401,6 +401,22 @@ describe('app', () => {
             expect(body.comments).toHaveLength(5)
           })
         })      
+      })
+      test('status: 400, message comment not found', () => {
+        return request(app)
+        .delete('/api/comments/5555')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe('comment not found')
+        })
+      })
+      test('status: 400, message invalid input data', () => {
+        return request(app)
+        .delete('/api/comments/NOT_VALID')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid input data')
+        })
       })
     })
   })

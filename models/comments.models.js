@@ -68,8 +68,12 @@ exports.removeComment = ({ comment_id }) => {
   [comment_id]
   )
   .then(({ rows }) => {
-    console.log(rows[0])
-    return rows[0]
+    const comment = rows[0]
+    if (!comment) {
+      return Promise.reject({ status: 404, message: 'comment not found'
+      })
+    }
+    return comment
   })
 }
 
