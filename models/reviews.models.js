@@ -64,6 +64,11 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
     .includes(order)) {
       return Promise.reject({ status: 400, message: "Invalid order query" });
   };
+  if (/\d+/.test(category)) {
+    return  Promise.reject({
+      status:400, message:'Invalid category'
+    });
+  };
 
   let queryStr = `
     SELECT 
@@ -78,18 +83,11 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
     ON reviews.review_id = comments.review_id`;
 
   const queryValues = [];
-
+  
   if (category) {
-    // console.log(category.match(/d+/), '<------')
-    // if (typeof category === 'string') {
       queryValues.push(category);
       queryStr += `
       WHERE category = $1`
-    // } else {
-    //   return Promise.reject({
-    //     status: 400, message: 'Not a valid category'
-    //   })
-    // }
   };
 
   queryStr += `
@@ -100,9 +98,19 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
   return db.query(queryStr, queryValues)
   .then(({ rows }) => {
     if (rows.length === 0) {
-      return Promise.reject({
-        status: 400, message: 'No matching category'
-      });
+      return db.query(`
+      SELECT * FROM categories
+      WHERE slug = $1;`,
+      [category]
+      )
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          return []
+        }
+        return Promise.reject({
+          status: 404, message: 'No matching category'
+        });
+      })   
     };
     return rows
   });
