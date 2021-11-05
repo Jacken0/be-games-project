@@ -10,18 +10,19 @@ const seed = (data) => {
   .then(() => db.query('DROP TABLE IF EXISTS users;'))
 
   .then(() => { return db.query(`
-
     CREATE TABLE users (
       username VARCHAR PRIMARY KEY,
       name VARCHAR NOT NULL,
       avatar_url TEXT
-    );`)
+    );`
+    );
   })
   .then(() => { return db.query(`
     CREATE TABLE categories (
       slug VARCHAR PRIMARY KEY,
       description VARCHAR
-    );`)
+    );`
+    );
   })
   .then(() => { return db.query(`
     CREATE TABLE reviews (
@@ -34,7 +35,8 @@ const seed = (data) => {
       category VARCHAR REFERENCES categories(slug),
       owner VARCHAR REFERENCES users(username),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`)
+    );`
+    );
   })
   .then(() => { return db.query(`
     CREATE TABLE comments (
@@ -44,12 +46,10 @@ const seed = (data) => {
       votes INT DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       body TEXT
-    );`)
+    );`
+    );
   })
   .then(() => {
-    console.log('Inserting data ...')
-    //console.log('Inserting user data ...')
-
     const queryUsers = format(`
       INSERT INTO users (username, name, avatar_url)
       VALUES %L
@@ -57,12 +57,10 @@ const seed = (data) => {
         userData.map((user) => {
           return [user.username, user.name, user.avatar_url];
         })
-    )
+    );
     return db.query(queryUsers);
   })
   .then(() => {
-    //console.log('Inserting category data ...')
-
     const queryCategories = format(`
       INSERT INTO categories (slug, description)
       VALUES %L
@@ -70,11 +68,10 @@ const seed = (data) => {
         categoryData.map((category) => {
           return [category.slug, category.description];
         })
-    )
+    );
     return db.query(queryCategories);
   })
   .then(() => {
-    //console.log('Inserting review data ...')
     const queryReviews = format(`
       INSERT INTO reviews (title, designer, owner, review_img_url, review_body, category, created_at, votes)
       VALUES %L
@@ -82,12 +79,10 @@ const seed = (data) => {
         reviewData.map((review) => {
           return [review.title, review.designer, review.owner, review.review_img_url, review.review_body, review.category, review.created_at, review.votes];
         })
-    )
+    );
     return db.query(queryReviews);
   })
   .then(() => {
-    //console.log('Inserting comment data ...')
-
     const queryComments = format(`
       INSERT INTO comments (body, votes, author, review_id, created_at)
       VALUES %L
@@ -95,12 +90,9 @@ const seed = (data) => {
         commentData.map((comment) => {
           return [comment.body, comment.votes, comment.author, comment.review_id, comment.created_at];
         })
-    )
+    );
     return db.query(queryComments);
   })
-
-  // 1. create tables
-  // 2. insert data
 };
 
 module.exports = seed;

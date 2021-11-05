@@ -1,11 +1,8 @@
 const categoriesRouter = require('express').Router();
-
-const { getCategories } = require('../controllers/games.controllers');
+const { getCategories } = require('../controllers/reviews.controllers');
 
 categoriesRouter
   .route('/')
   .get(getCategories);
-
-
 
 module.exports = categoriesRouter;

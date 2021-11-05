@@ -1,6 +1,5 @@
 const { getComments, postComment } = require('../controllers/comments.controllers');
-const { getReviews, patchReview, getAllReviews } = require('../controllers/games.controllers');
-//const commentsRouter = require('./comments-router');
+const { getReviews, patchReview, getAllReviews } = require('../controllers/reviews.controllers');
 
 const reviewsRouter = require('express').Router();
 

@@ -4,7 +4,8 @@ exports.fetchComments = ({ review_id }) => {
   return db.query(`
   SELECT comment_id, votes, created_at, author, body
   FROM comments
-  WHERE review_id = $1;`, [review_id])
+  WHERE review_id = $1;`, [review_id]
+  )
   .then(({ rows }) => {
     if (rows.length === 0) {
       return db.query(`
@@ -17,15 +18,15 @@ exports.fetchComments = ({ review_id }) => {
           return Promise.reject({
             status: 200, message: 'No comments for this review yet, post now to be the first!'
           })
-        }
+        };
         return Promise.reject({
           status: 404, message: 'review not found'
-        })
-      })     
-    }
+        });
+      });
+    };
     return rows
-  })
-}
+  });
+};
 
 exports.insertComment = ({ review_id },{ username, body }) => {
   return db.query(`
@@ -37,27 +38,24 @@ exports.insertComment = ({ review_id },{ username, body }) => {
     if (rows.length === 0) {
       return Promise.reject({
         status: 400, message: 'Invalid username'
-      })
+      });
     } else if (
       typeof body != 'string') {
         return Promise.reject({
           status: 400, message: 'Invalid body'
-        })
+        });
     } else {
       return db.query(`
-  INSERT INTO comments (
-    author, body, review_id )
-    VALUES ($1, $2, $3)
-    RETURNING* ;`,
-    [username, body, review_id]
-  )
-  .then(({ rows }) => {
-    console.log(rows)
-    return rows[0]
-  })
-    }
-  })    
-}
+      INSERT INTO comments (
+      author, body, review_id )
+      VALUES ($1, $2, $3)
+      RETURNING* ;`,
+      [username, body, review_id]
+    )
+    .then(({ rows }) => rows[0] );
+    };
+  });  
+};
 
 exports.removeComment = ({ comment_id }) => {
   return db.query(`
@@ -70,17 +68,15 @@ exports.removeComment = ({ comment_id }) => {
     const comment = rows[0]
     if (!comment) {
       return Promise.reject({ status: 404, message: 'comment not found'
-      })
-    }
+      });
+    };
     return comment
-  })
-}
+  });
+};
 
 exports.fetchAllComments = () => {
   return db.query(`
   SELECT *
   FROM comments;`)
-  .then(({ rows }) => {
-    return rows
-  })
-}
+  .then(({ rows }) => rows );
+};
