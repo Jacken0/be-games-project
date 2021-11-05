@@ -36,8 +36,8 @@ describe('app', () => {
           })
         })
       })
-    })
-  })
+    });
+  });
 
   describe('/api/reviews/:review_id', () => {
     describe('GET', () => {
@@ -79,7 +79,7 @@ describe('app', () => {
             expect(body.message).toBe('Review not found')
           })
         })
-    })
+    });
 
     describe('PATCH', () => {
         test('Status: 200, and updated review object', () => {
@@ -175,7 +175,7 @@ describe('app', () => {
             })
           })
         })
-      })
+      });
       test('status: 200, reviews are sorted by date as default', () => {
         return request(app)
           .get('/api/reviews')
@@ -185,7 +185,7 @@ describe('app', () => {
                 descending: true 
               })
           })
-      })
+      });
       test('status: 200, accepts sort_by query', () => {
         return request(app)
           .get('/api/reviews?sort_by=title')
@@ -231,7 +231,7 @@ describe('app', () => {
               descending: true 
             })
           })
-      })
+      });
       test('status: 200, accepts order query', () => {
         return request(app)
           .get('/api/reviews?order=asc')
@@ -241,7 +241,7 @@ describe('app', () => {
               ascending: true 
             })
           })
-      })
+      });
       test('status: 400, message of invalid order query', () => {
         return request(app)
           .get('/api/reviews?order=INVALID')
@@ -249,7 +249,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.message).toBe('Invalid order query')
           })
-      })
+      });
       test('status: 400, message of invalid data type', () => {
         return request(app)
           .get('/api/reviews?order=5555')
@@ -257,7 +257,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.message).toBe('Invalid order query')
           })
-      })
+      });
       test('Status: 200, returns only reviews for category of dexterity', () => {
         return request(app)
           .get('/api/reviews?category=dexterity')
@@ -279,25 +279,33 @@ describe('app', () => {
               })
             })
           })
-      })
+      });
       test('Status: 400, error message of no matching category when passed a string', () => {
         return request(app)
           .get('/api/reviews?category=not_a_category')
-          .expect(400)
+          .expect(404)
           .then(({ body }) => {
             expect(body.message).toBe('No matching category')
           })
-      })
-      test('Status: 400, error message of no matching category when passed an invalid data type', () => {
+      });
+      test('Status: 400, error message of invalid category when passed an invalid data type', () => {
         return request(app)
           .get('/api/reviews?category=5555')
           .expect(400)
           .then(({ body }) => {
-            expect(body.message).toBe('No matching category')
+            expect(body.message).toBe('Invalid category')
           })
+      });
+      test('Status: 200, responds with empty array when category exists but no reviews', () => {
+        return request(app)
+          .get('/api/reviews?category=children\'s games')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toEqual([]);
+          });
       })
-    })
-  })
+    });
+  });
 
   describe('/api/reviews/:review_id/comments', () => {
     describe('GET', () => {
@@ -344,7 +352,7 @@ describe('app', () => {
           expect(body.message).toBe('Invalid input data')
         })
       })
-    })
+    });
     describe('POST', () => {
       test('status: 201, responds with added comment', () => {
         const newComment = {
@@ -485,8 +493,8 @@ describe('app', () => {
           expect(body.message).toBe('Invalid input data')
         })
       })
-    })
-  })
+    });
+  });
 
   describe('/api/comments/:comment_id', () => {
     describe('DELETE', () => {
@@ -519,8 +527,8 @@ describe('app', () => {
           expect(body.message).toBe('Invalid input data')
         })
       })
-    })
-  })
+    });
+  });
 
   describe('/api', () => {
     describe('GET', () => {
@@ -638,6 +646,6 @@ describe('app', () => {
           })
         })
       })
-    })
-  })
-})
+    });
+  });
+});
