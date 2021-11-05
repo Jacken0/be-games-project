@@ -101,7 +101,7 @@ describe('app', () => {
             }
             })
           })
-        })
+        });
         test('Status: 200, and unchanged review object when sent empty object', () => {
           return request(app)
           .patch('/api/reviews/1')
@@ -130,7 +130,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.message).toBe('Review not found')
           })
-        })
+        });
         test('Status: 400, and message Invalid data type', () => {
           return request(app)
           .patch('/api/reviews/not_an_id')
@@ -139,7 +139,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.message).toBe('Invalid input data')
           })
-        })
+        });
         test('Status: 400, and message Invalid data type', () => {
           return request(app)
           .patch('/api/reviews/1')
@@ -148,7 +148,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.message).toBe('Invalid input data')
           })
-        })
+        });
     })
   })
 
@@ -403,6 +403,19 @@ describe('app', () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe('Invalid body')
+        })
+      });
+      test('status: 404, review_id valid but doesn\'t exist message review not found', () => {
+        const newComment = {
+          username: 'bainesface',
+          body: 'THIS IS A TEST'
+        }
+        return request(app)
+        .post('/api/reviews/5555/comments')
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe('Review not found')
         })
       })
     })

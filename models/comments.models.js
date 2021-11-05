@@ -30,32 +30,47 @@ exports.fetchComments = ({ review_id }) => {
 
 exports.insertComment = ({ review_id },{ username, body }) => {
   return db.query(`
-  SELECT * FROM users
-  WHERE username = $1;`,
-  [username]
+  SELECT * FROM reviews
+  WHERE review_id = $1;`,
+  [review_id]
   )
   .then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({
-        status: 400, message: 'Invalid username'
-      });
-    } else if (
-      typeof body != 'string') {
-        return Promise.reject({
-          status: 400, message: 'Invalid body'
-        });
-    } else {
-      return db.query(`
-      INSERT INTO comments (
-      author, body, review_id )
-      VALUES ($1, $2, $3)
-      RETURNING* ;`,
-      [username, body, review_id]
-    )
-    .then(({ rows }) => rows[0] );
+    const review = rows[0];  
+    if (!review) {
+      return Promise.reject({ status: 404, message: 'Review not found'})
     };
-  });  
-};
+    return db.query(`
+    SELECT * FROM users
+    WHERE username = $1;`,
+    [username]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 400, message: 'Invalid username'
+        });
+      } else if (
+        typeof body != 'string') {
+          return Promise.reject({
+            status: 400, message: 'Invalid body'
+          });
+      } else {
+        return db.query(`
+        INSERT INTO comments (
+        author, body, review_id )
+        VALUES ($1, $2, $3)
+        RETURNING* ;`,
+        [username, body, review_id]
+      )
+      .then(({ rows }) => rows[0] );
+      };
+    });
+  });
+}
+  // .then(() => {
+  //   console.log(review)
+  //   console.log('HERE?')
+    
 
 exports.removeComment = ({ comment_id }) => {
   return db.query(`
