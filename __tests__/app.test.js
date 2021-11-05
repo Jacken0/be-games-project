@@ -356,7 +356,27 @@ describe('app', () => {
         .send(newComment)
         .expect(201)
         .then(({ body }) => {
-          //console.log(body,'<-----')
+          expect(body.comment).toMatchObject({
+            body: 'THIS IS A TEST',
+            votes: expect.any(Number),
+            author: 'bainesface',
+            comment_id: expect.any(Number),
+            created_at: expect.any(String)
+          })
+        })
+      });
+      test('status: 201, responds with added comment ignoring extra elements', () => {
+        const newComment = {
+          username: 'bainesface',
+          body: 'THIS IS A TEST',
+          category: 'euro game',
+          unused: 'test'
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
           expect(body.comment).toMatchObject({
             body: 'THIS IS A TEST',
             votes: expect.any(Number),
@@ -374,9 +394,9 @@ describe('app', () => {
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe('Invalid username')
+          expect(body.message).toBe('username not found')
         })
       })
       test('status: 400, invalid username data type', () => {
@@ -405,6 +425,40 @@ describe('app', () => {
           expect(body.message).toBe('Invalid body')
         })
       });
+      test('status: 400, missing body', () => {
+        const newComment = {
+          username: 'bainesface',
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Missing required field(s)')
+        })
+      });
+      test('status: 400, missing username', () => {
+        const newComment = {
+          body: 'THIS IS A TEST',
+        }
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Missing required field(s)')
+        })
+      });
+      test('status: 400, missing all required fields', () => {
+        const newComment = {}
+        return request(app)
+        .post('/api/reviews/1/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Missing required field(s)')
+        })
+      });
       test('status: 404, review_id valid but doesn\'t exist message review not found', () => {
         const newComment = {
           username: 'bainesface',
@@ -416,6 +470,19 @@ describe('app', () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.message).toBe('Review not found')
+        })
+      })
+      test('status: 404, review_id valid but doesn\'t exist message review not found', () => {
+        const newComment = {
+          username: 'bainesface',
+          body: 'THIS IS A TEST'
+        }
+        return request(app)
+        .post('/api/reviews/NOT_AN_ID/comments')
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe('Invalid input data')
         })
       })
     })
