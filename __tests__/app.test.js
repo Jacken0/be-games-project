@@ -328,12 +328,12 @@ describe('app', () => {
           })
         })
       })
-      test('status: 200, no comments for this review yet, post now to be the first!', () => {
+      test('status: 200, responds with empty comment array', () => {
         return request(app)
         .get('/api/reviews/1/comments')
         .expect(200)
         .then(({ body }) => {
-          expect(body.message).toBe('No comments for this review yet, post now to be the first!')
+          expect(body.comments).toEqual([])
         })
       })
       test('status: 404, review not found', () => {
