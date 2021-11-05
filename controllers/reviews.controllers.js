@@ -18,7 +18,7 @@ exports.getReviews = (req, res, next) => {
 exports.patchReview = (req, res, next) => {
   updateReview(req.params, req.body)
   .then((review) => {
-    res.status(201).send({ review })
+    res.status(200).send({ review })
   })
   .catch(next)
 };

@@ -82,11 +82,11 @@ describe('app', () => {
     })
 
     describe('PATCH', () => {
-        test('Status: 201, and updated review object', () => {
+        test('Status: 200, and updated review object', () => {
           return request(app)
           .patch('/api/reviews/1')
           .send({ inc_votes: 5 })
-          .expect(201)
+          .expect(200)
           .then(({ body }) => {
             expect(body).toEqual({ review: {
               review_id: 1,
@@ -102,6 +102,26 @@ describe('app', () => {
             })
           })
         })
+        test('Status: 200, and unchanged review object when sent empty object', () => {
+          return request(app)
+          .patch('/api/reviews/1')
+          .send({ })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body).toEqual({ review: {
+              review_id: 1,
+              title: 'Agricola',
+              review_body: 'Farmyard fun!',
+              designer: 'Uwe Rosenberg',
+              review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+              votes: 1,
+              category: 'euro game',
+              owner: 'mallionaire',
+              created_at: '2021-01-18T10:00:20.514Z'
+            }
+            })
+          })
+        });
         test('Status: 404, and message review not found', () => {
           return request(app)
           .patch('/api/reviews/9999')

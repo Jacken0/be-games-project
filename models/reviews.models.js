@@ -27,7 +27,7 @@ exports.fetchReviews = ({ review_id }) => {
   });
 };
 
-exports.updateReview = ({ review_id }, { inc_votes }) => {
+exports.updateReview = ({ review_id }, { inc_votes = 0}) => {
   return db.query(`
     UPDATE reviews 
     SET votes = votes + $1
@@ -80,9 +80,16 @@ exports.fetchAllReviews = (sort_by = 'reviews.created_at', order = 'desc', categ
   const queryValues = [];
 
   if (category) {
-    queryValues.push(category);
-    queryStr += `
-    WHERE category = $1`
+    // console.log(category.match(/d+/), '<------')
+    // if (typeof category === 'string') {
+      queryValues.push(category);
+      queryStr += `
+      WHERE category = $1`
+    // } else {
+    //   return Promise.reject({
+    //     status: 400, message: 'Not a valid category'
+    //   })
+    // }
   };
 
   queryStr += `
