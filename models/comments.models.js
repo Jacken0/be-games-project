@@ -39,15 +39,23 @@ exports.insertComment = ({ review_id },{ username, body }) => {
     if (!review) {
       return Promise.reject({ status: 404, message: 'Review not found'})
     };
+    if (!username || !body) {
+      return Promise.reject({ status: 400, message: 'Missing required field(s)'})
+    };
     return db.query(`
     SELECT * FROM users
     WHERE username = $1;`,
     [username]
     )
     .then(({ rows }) => {
-      if (rows.length === 0) {
+      if (typeof username !== 'string') {
         return Promise.reject({
           status: 400, message: 'Invalid username'
+        })
+      }
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404, message: 'username not found'
         });
       } else if (
         typeof body != 'string') {
@@ -66,11 +74,7 @@ exports.insertComment = ({ review_id },{ username, body }) => {
       };
     });
   });
-}
-  // .then(() => {
-  //   console.log(review)
-  //   console.log('HERE?')
-    
+};  
 
 exports.removeComment = ({ comment_id }) => {
   return db.query(`
