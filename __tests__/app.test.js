@@ -32,10 +32,10 @@ describe('app', () => {
             expect(category).toMatchObject({
               slug: expect.any(String),
               description: expect.any(String),
-            })
-          })
-        })
-      })
+            });
+          });
+        });
+      });
     });
   });
 
@@ -60,25 +60,25 @@ describe('app', () => {
                 votes: 1,
                 comment_count: '0'
               }
-            })
-          })
-        })
-        test('status: 400, Invalid data type', () => {
+            });
+          });
+        });
+        test('status: 400, Invalid input data type', () => {
           return request(app)
           .get('/api/reviews/not_a_number')
           .expect(400)
           .then(({ body }) => {
             expect(body.message).toBe('Invalid input data')
-          })
-        })
-        test('status: 404, Review not found', () => {
+          });
+        });
+        test('status: 404, Review not found when given an id that is valid but out of range', () => {
           return request(app)
-          .get('/api/reviews/5555') // Number out of range
+          .get('/api/reviews/5555')
           .expect(404)
           .then(({ body }) => {
-            expect(body.message).toBe('Review not found')
-          })
-        })
+            expect(body.message).toBe('Review not found');
+          });
+        });
     });
 
     describe('PATCH', () => {
@@ -98,9 +98,9 @@ describe('app', () => {
               category: 'euro game',
               owner: 'mallionaire',
               created_at: '2021-01-18T10:00:20.514Z'
-            }
-            })
-          })
+              }
+            });
+          });
         });
         test('Status: 200, and unchanged review object when sent empty object', () => {
           return request(app)
@@ -118,9 +118,9 @@ describe('app', () => {
               category: 'euro game',
               owner: 'mallionaire',
               created_at: '2021-01-18T10:00:20.514Z'
-            }
-            })
-          })
+              }
+            });
+          });
         });
         test('Status: 404, and message review not found', () => {
           return request(app)
@@ -129,7 +129,7 @@ describe('app', () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.message).toBe('Review not found')
-          })
+          });
         });
         test('Status: 400, and message Invalid data type', () => {
           return request(app)
@@ -138,7 +138,7 @@ describe('app', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.message).toBe('Invalid input data')
-          })
+          });
         });
         test('Status: 400, and message Invalid data type', () => {
           return request(app)
@@ -147,10 +147,10 @@ describe('app', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.message).toBe('Invalid input data')
-          })
+          });
         });
-    })
-  })
+    });
+  });
 
   describe('/api/reviews', () => {
     describe('GET', () => {
@@ -172,9 +172,9 @@ describe('app', () => {
               created_at: expect.any(String),
               votes: expect.any(Number),
               comment_count: expect.any(String)
-            })
-          })
-        })
+            });
+          });
+        });
       });
       test('status: 200, reviews are sorted by date as default', () => {
         return request(app)
@@ -183,8 +183,8 @@ describe('app', () => {
           .then(({ body }) => {
               expect(body.reviews).toBeSortedBy('created_at', { 
                 descending: true 
-              })
-          })
+              });
+          });
       });
       test('status: 200, accepts sort_by query', () => {
         return request(app)
@@ -229,8 +229,8 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.reviews).toBeSortedBy('created_at', { 
               descending: true 
-            })
-          })
+            });
+          });
       });
       test('status: 200, accepts order query', () => {
         return request(app)
@@ -239,8 +239,8 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.reviews).toBeSortedBy('created_at', { 
               ascending: true 
-            })
-          })
+            });
+          });
       });
       test('status: 400, message of invalid order query', () => {
         return request(app)
@@ -248,7 +248,7 @@ describe('app', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.message).toBe('Invalid order query')
-          })
+          });
       });
       test('status: 400, message of invalid data type', () => {
         return request(app)
@@ -256,7 +256,7 @@ describe('app', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.message).toBe('Invalid order query')
-          })
+          });
       });
       test('Status: 200, returns only reviews for category of dexterity', () => {
         return request(app)
@@ -276,25 +276,25 @@ describe('app', () => {
                 created_at: expect.any(String),
                 votes: expect.any(Number),
                 comment_count: expect.any(String)
-              })
-            })
-          })
+              });
+            });
+          });
       });
       test('Status: 400, error message of no matching category when passed a string', () => {
         return request(app)
           .get('/api/reviews?category=not_a_category')
           .expect(404)
           .then(({ body }) => {
-            expect(body.message).toBe('No matching category')
-          })
+            expect(body.message).toBe('No matching category');
+          });
       });
       test('Status: 400, error message of invalid category when passed an invalid data type', () => {
         return request(app)
           .get('/api/reviews?category=5555')
           .expect(400)
           .then(({ body }) => {
-            expect(body.message).toBe('Invalid category')
-          })
+            expect(body.message).toBe('Invalid category');
+          });
       });
       test('Status: 200, responds with empty array when category exists but no reviews', () => {
         return request(app)
@@ -303,7 +303,7 @@ describe('app', () => {
           .then(({ body }) => {
             expect(body.reviews).toEqual([]);
           });
-      })
+      });
     });
   });
 
@@ -324,41 +324,42 @@ describe('app', () => {
               created_at: expect.any(String),
               author: expect.any(String),
               body: expect.any(String),
-            })
-          })
-        })
-      })
+            });
+          });
+        });
+      });
       test('status: 200, responds with empty comment array', () => {
         return request(app)
         .get('/api/reviews/1/comments')
         .expect(200)
         .then(({ body }) => {
-          expect(body.comments).toEqual([])
-        })
-      })
+          expect(body.comments).toEqual([]);
+        });
+      });
       test('status: 404, review not found', () => {
         return request(app)
         .get('/api/reviews/5555/comments')
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe('review not found')
-        })
-      })
+          expect(body.message).toBe('review not found');
+        });
+      });
       test('status: 400, invalid data type', () => {
         return request(app)
         .get('/api/reviews/not_valid/comments')
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Invalid input data')
-        })
-      })
+          expect(body.message).toBe('Invalid input data');
+        });
+      });
     });
+
     describe('POST', () => {
       test('status: 201, responds with added comment', () => {
         const newComment = {
           username: 'bainesface',
           body: 'THIS IS A TEST'
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
@@ -370,8 +371,8 @@ describe('app', () => {
             author: 'bainesface',
             comment_id: expect.any(Number),
             created_at: expect.any(String)
-          })
-        })
+          });
+        });
       });
       test('status: 201, responds with added comment ignoring extra elements', () => {
         const newComment = {
@@ -379,7 +380,7 @@ describe('app', () => {
           body: 'THIS IS A TEST',
           category: 'euro game',
           unused: 'test'
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
@@ -391,71 +392,71 @@ describe('app', () => {
             author: 'bainesface',
             comment_id: expect.any(Number),
             created_at: expect.any(String)
-          })
-        })
-      })
+          });
+        });
+      });
       test('status: 400, invalid username', () => {
         const newComment = {
           username: 'NOT_A_USER',
           body: 'THIS IS A TEST'
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe('username not found')
-        })
-      })
+          expect(body.message).toBe('username not found');
+        });
+      });
       test('status: 400, invalid username data type', () => {
         const newComment = {
           username: 5555,
           body: 'THIS IS A TEST'
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe('Invalid username')
-        })
-      })
+        });
+      });
       test('status: 400, invalid body', () => {
         const newComment = {
           username: 'bainesface',
           body: 5555
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Invalid body')
-        })
+          expect(body.message).toBe('Invalid body');
+        });
       });
       test('status: 400, missing body', () => {
         const newComment = {
           username: 'bainesface',
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Missing required field(s)')
-        })
+          expect(body.message).toBe('Missing required field(s)');
+        });
       });
       test('status: 400, missing username', () => {
         const newComment = {
           body: 'THIS IS A TEST',
-        }
+        };
         return request(app)
         .post('/api/reviews/1/comments')
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Missing required field(s)')
-        })
+          expect(body.message).toBe('Missing required field(s)');
+        });
       });
       test('status: 400, missing all required fields', () => {
         const newComment = {}
@@ -464,35 +465,35 @@ describe('app', () => {
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Missing required field(s)')
-        })
+          expect(body.message).toBe('Missing required field(s)');
+        });
       });
       test('status: 404, review_id valid but doesn\'t exist message review not found', () => {
         const newComment = {
           username: 'bainesface',
           body: 'THIS IS A TEST'
-        }
+        };
         return request(app)
         .post('/api/reviews/5555/comments')
         .send(newComment)
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe('Review not found')
-        })
-      })
+          expect(body.message).toBe('Review not found');
+        });
+      });
       test('status: 404, review_id valid but doesn\'t exist message review not found', () => {
         const newComment = {
           username: 'bainesface',
           body: 'THIS IS A TEST'
-        }
+        };
         return request(app)
         .post('/api/reviews/NOT_AN_ID/comments')
         .send(newComment)
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Invalid input data')
-        })
-      })
+          expect(body.message).toBe('Invalid input data');
+        });
+      });
     });
   });
 
@@ -508,25 +509,25 @@ describe('app', () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.comments).toHaveLength(5)
-          })
-        })      
-      })
+          });
+        });   
+      });
       test('status: 400, message comment not found', () => {
         return request(app)
         .delete('/api/comments/5555')
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe('comment not found')
-        })
-      })
+          expect(body.message).toBe('comment not found');
+        });
+      });
       test('status: 400, message invalid input data', () => {
         return request(app)
         .delete('/api/comments/NOT_VALID')
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe('Invalid input data')
-        })
-      })
+          expect(body.message).toBe('Invalid input data');
+        });
+      });
     });
   });
 
@@ -643,9 +644,9 @@ describe('app', () => {
             "DELETE /api/reviews/:review_id/comments": {
               "description": "provides only a status code of 204"
             }
-          })
-        })
-      })
+          });
+        });
+      });
     });
   });
 });
